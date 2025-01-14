@@ -1,0 +1,5 @@
+Le classi con il titolo al plurale sono utilizzate con i metodi statici
+
+L' interfaccia permette a piu implementatori di modificare i metodi senza interferire l' uno con l altro
+
+statement: va a stabilire un esecuzione di un comando 

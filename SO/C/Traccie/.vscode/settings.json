@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "unistd.h": "c",
+        "tracciaTH4.C": "cpp",
+        "tracciaTH5.C": "cpp",
+        "traccia5.C": "cpp"
+    }
+}

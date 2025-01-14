@@ -1,0 +1,5 @@
+package modelli;
+
+public enum Mansioni {
+    COLLABORATORE_SCOLASTICO, PROFESSORE, SEGRETARIO, PULITORE, FOCAL_POINT
+}

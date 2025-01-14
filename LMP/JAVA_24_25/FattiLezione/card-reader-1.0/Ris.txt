@@ -1,0 +1,5 @@
+filetype:ristorante
+partita_IVA:56789
+sede:Firenze
+categoria:pizzeria
+in_attivita_dal:2001

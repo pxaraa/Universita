@@ -1,0 +1,4 @@
+filetype:associazione
+sede:Roma
+in_attivita_dal:2010
+scopo:ricreativo

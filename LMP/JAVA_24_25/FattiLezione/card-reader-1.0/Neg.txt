@@ -1,0 +1,5 @@
+filetype:negozio
+partita_IVA:01234
+sede:Milano
+merce_venduta:Elettronica 
+in_attivita_dal:2010

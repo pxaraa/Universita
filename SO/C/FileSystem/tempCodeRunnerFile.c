@@ -1,0 +1,1 @@
+fprintf(stderr, "Errore di sintassi. Uso: %s input_file_path output_file_path\n", argv[0]);
