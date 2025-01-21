@@ -2,37 +2,37 @@ package servizi;
 
 import modelli.Classe;
 import modelli.Studente;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GestioneClassi {
-    private GestioneStudenti gestioneStudenti;
+    private GestioneStudenti gestioneStudenti = new GestioneStudenti();
+    ArrayList<Studente> studenti = new ArrayList<>();
+    HashMap<Studente, Integer> ripetenti = new HashMap<>();
+    HashMap<Classe,Studente> risultato = new HashMap<>();
 
-    public GestioneClassi() {
-        this.gestioneStudenti = new GestioneStudenti();
+    public void aggiungiStudente(String nome, String cognome, String luogoNascita, String dataNascita,int annoIscrizione) {
+        studenti.add(new Studente(nome,cognome,luogoNascita,dataNascita,annoIscrizione));
     }
 
-    public Map<Classe, Map<Studente, Integer>> ottieniRipetentiPerClasse(Classe classe) {
-        Map<Studente, Integer> ripetenti = new HashMap<>();
+    public  void ottieniRipetentiPerClasse(Classe classe) {
         for (Studente studente : classe.getStudenti()) {
             if (gestioneStudenti.isRipetente(studente, classe)) {
                 int anniRipetuti = gestioneStudenti.calcolaAnniRipetuti(studente, classe);
                 ripetenti.put(studente, anniRipetuti);
             }
         }
-        Map<Classe, Map<Studente, Integer>> risultato = new HashMap<>();
         risultato.put(classe, ripetenti);
-        return risultato;
     }
 
-    public void stampaRipetenti(Map<Classe, Map<Studente, Integer>> ripetentiPerClasse) {
-        for (Map.Entry<Classe, Map<Studente, Integer>> entry : ripetentiPerClasse.entrySet()) {
+    public void stampaRipetenti() {
+        for (HashMap.Entry<Classe, HashMap<Studente, Integer>> entry : risultato.entrySet()) {
             Classe classe = entry.getKey();
-            Map<Studente, Integer> ripetenti = entry.getValue();
+            HashMap<Studente, Integer> ripetenti = entry.getValue();
             System.out.println("Classe: " + classe.getNome() + ", Sezione: " + classe.getSezione());
             System.out.println("Ripetenti:");
-            for (Map.Entry<Studente, Integer> studenteEntry : ripetenti.entrySet()) {
+            for (HashMap.Entry<Studente, Integer> studenteEntry : ripetenti.entrySet()) {
                 Studente studente = studenteEntry.getKey();
                 int anniRipetuti = studenteEntry.getValue();
                 System.out.println("- " + studente.getNome() + " " + studente.getCognome() + " | Anni ripetuti: " + anniRipetuti);

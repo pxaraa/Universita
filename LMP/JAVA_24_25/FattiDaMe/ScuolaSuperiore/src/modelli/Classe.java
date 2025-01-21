@@ -19,14 +19,8 @@ public class Classe {
     }
 
     //una volta istanziata la classe, con questo metodo aggiungiamo studendi all' array "studenti"
-    public void aggiungiStudente(Studente studente) {
-        studenti.add(studente);
-    }
 
-    //metodo che conta i studenti nell' array
-    public int contaStudenti() {
-        return studenti.size();
-    }
+
 
     //getter
     public List<Studente> getStudenti() {
