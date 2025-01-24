@@ -1,0 +1,104 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+Programmazione Dinamica:
+Serve a trasferire la complessità computazionale a discapito della complessità spaziale. Ricorda le computazioni.
+Divido il problema in sottoproblemi, ma i sotto problemi hanno una soluzione che è gia stata trovata.
+
+Fibonacci f(n) = f(n-1) + f(n-2)
+mi tengo in memoria f(n-2).
+</div>
+
+<div class="nb-cell program" name="p1">
+fib(0,0).
+fib(1,1).
+
+fib(N,M):-
+    Nmeno1 is N - 1,
+    Nmeno2 is N - 2,
+    fib(Nmeno1,M1),
+    fib(Nmeno2,M2),
+    M is M1 + M2.
+</div>
+
+<div class="nb-cell query" name="q1">
+fib(5,M).
+
+</div>
+
+<div class="nb-cell markdown" name="md2">
+Adesso proviamo a renderlo dinamico in modo da asserire e memorizzare il nuovo fatto.
+</div>
+
+<div class="nb-cell program" name="p2">
+:- dynamic fib/2.
+
+fib(0,0).
+fib(1,1).
+
+fib(N,M):-
+    N &gt; 1,
+    Nmeno1 is N - 1,
+    Nmeno2 is N - 2,
+    fib(Nmeno1,M1),
+    fib(Nmeno2,M2),
+    M is M1 + M2,
+    assert(fib(N,M)),
+    listing(fib).
+</div>
+
+<div class="nb-cell query" name="q2">
+fib(5,M).
+</div>
+
+<div class="nb-cell markdown" name="md3">
+Come possiamo vedere si ripetono alcuni fatti. Ci apsettiamo che una volta calcolato il sottoproblema lo tenga in memoria.
+</div>
+
+<div class="nb-cell program" name="p3">
+:- dynamic fib/2.
+
+fib(0,0).
+fib(1,1).
+
+fib(N,M):-
+    N &gt; 1,
+    Nmeno1 is N - 1,
+    Nmeno2 is N - 2,
+    fib(Nmeno1,M1),
+    fib(Nmeno2,M2),
+    M is M1 + M2,
+    asserta(fib(N,M)), %adesso non si ripetono perchè stiamo asserendo in testa
+    listing(fib).
+</div>
+
+<div class="nb-cell query" name="q3">
+fib(5,M).
+</div>
+
+<div class="nb-cell markdown" name="md4">
+Se clicchiamo next va in loop allora usiamo il cut.
+</div>
+
+<div class="nb-cell program" name="p4">
+:- dynamic fib/2.
+
+fib(0,0).
+fib(1,1).
+
+fib(N,M):-
+    N &gt; 1,
+    Nmeno1 is N - 1,
+    Nmeno2 is N - 2,
+    fib(Nmeno1,M1),
+    fib(Nmeno2,M2),
+    M is M1 + M2,
+    asserta(fib(N,M):-!),
+    listing(fib).
+</div>
+
+<div class="nb-cell query" name="q4">
+fib(5,M).
+</div>
+
+</div>

@@ -1,0 +1,278 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+Il Prof. Verdi è in un momento di lavoro estremo. È principal investigator (PI) di tre progetti: KATY, SfidaNow, Step. Partecipa al progetto Revert e al progetto GiustiziaGiusta. Deve prendere parte a 9 proposte di progetti. Deve insegnare per 10 ore alla settimana e, ogni ora, richiede un tempo di preparazione di 15 minuti. Inoltre, ha 6 collaboratori e deve studiare per almeno 4 ore a settimana. Deve anche revisionare articoli per 2 ore a settimana.
+
+Tenendo conto che i progetti di cui è PI richiedono 4 ore a settimana mediamente. I progetti ai quali partecipa richiedono 3 ore mediamente. Le proposte di progetto richiedono 1 ora mediamente. Dedica 1 ora a collaboratore per settimana. Organizzare una tabella oraria settimanale tenendo conto dei limiti fisici del tempo a disposizione e che il cambio di contesto da una attività all’altra richiede 15 minuti.
+
+Si scriva il predicato:
+
+
+tabella_oraria_settimanale(SETTIMANA)
+che sia vero se SETTIMANA è una rappresentazione della tabella oraria settimanale del Prof. Verd
+</div>
+
+<div class="nb-cell markdown" name="md2">
+Iniziamo col chiederci come rappresentiamo il dato SETTIMANA?
+lunedi([_,_,_,_,_])
+maertedì([_,_,_,_,_])
+.
+.
+.
+</div>
+
+<div class="nb-cell program" name="p1">
+tabella_oraria_settimanale(Settimana):-
+    Nslots is 4*8*6, %4 (ogni ora ha 4 da 15)slot per 8 ore e 6 giorni
+    length(Settimana,Nslots).
+</div>
+
+<div class="nb-cell query" name="q1">
+tabella_oraria_settimanale(O).
+</div>
+
+<div class="nb-cell markdown" name="md3">
+Per ora trascuro i 15 minuti affinche sia più semplice iniziare con il programma.
+</div>
+
+<div class="nb-cell program" name="p2">
+oc_slot(katy,prj,240).
+oc_slot(sfidanow,prj,240).
+oc_slot(step,prj,240).
+
+oc_slot(giustiziagiusta,prj,180).
+oc_slot(revert,prj,180).
+
+oc_slot(foi,lez,360).
+oc_slot(lmp,lez,240).
+
+oc_slot(c1,coll,60).
+oc_slot(c2,coll,60).
+oc_slot(c3,coll,60).
+oc_slot(c4,coll,60).
+oc_slot(c5,coll,60).
+oc_slot(c6,coll,60).
+
+oc_slot(studio,studio,240).
+oc_slot(revisione,studio,120).
+
+oc_slot(tempo_libero,tempo_libero,1000). %viene immesso solo dopo gli altri
+</div>
+
+<div class="nb-cell markdown" name="md4">
+Dobbiamo fare in modo che Settimana contenga una possibile istanza di tutto ciò.
+
+Come possiamo fare? Non è la soluzione efficente perche facciamo separatamente tabella_possibile(Settimana) e vincoli_soddisfatti(Settimana). Però ci aiuta a capire:
+</div>
+
+<div class="nb-cell program" name="p3">
+tabella_oraria_settimanale(Settimana):-
+    Nslots is 4*8*6,
+    length(Settimana,Nslots),
+    tabella_possibile(Settimana),
+    vincoli_soddisfatti(Settimana)
+</div>
+
+<div class="nb-cell markdown" name="md5">
+tabella_possibile(Settimana) ha come suo valori istanziati katy ecc...., la lavoriamo in maniera induttiva.                                                                 
+Il predicato è vero se 15 minuti sono occupati da qualocosa che possa occupare 15 minuti
+</div>
+
+<div class="nb-cell program" name="p4">
+oc_slot(katy,prj,240).
+oc_slot(sfidanow,prj,240).
+oc_slot(step,prj,240).
+oc_slot(giustiziagiusta,prj,180).
+oc_slot(revert,prj,180).
+oc_slot(foi,lez,360).
+oc_slot(lmp,lez,240).
+oc_slot(c1,coll,60).
+oc_slot(c2,coll,60).
+oc_slot(c3,coll,60).
+oc_slot(c4,coll,60).
+oc_slot(c5,coll,60).
+oc_slot(c6,coll,60).
+oc_slot(studio,studio,240).
+oc_slot(revisione,studio,120).
+oc_slot(tempo_libero,tempo_libero,1000).
+
+tabella_oraria_settimanale(Settimana):-
+    Nslots is 4*8*6,
+    length(Settimana,Nslots),
+    tabella_possibile(Settimana),
+    vincoli_soddisfatti(Settimana).
+
+tabella_possibile([]).
+tabella_possibile([_15Min|L]):-
+    oc_slot(_15Min,_,_),
+    tabella_possibile(L).
+</div>
+
+<div class="nb-cell query" name="q2">
+tabella_possibile([L1,L2,L3]).
+</div>
+
+<div class="nb-cell markdown" name="md6">
+Adesso facciamo il predicato per soddisfare i vincoli. Se nella settimana abbiamo tutte le attivita
+</div>
+
+<div class="nb-cell program" name="p5">
+vincoli_soddisfatti(Settimana):-
+    setof((A,T),X^oc_slot(A,X,T),ListaAttività),
+    inSerttimanaAbbiamoTutteLeAttivita(ListaAttività,Settimana).
+
+inSerttimanaAbbiamoTutteLeAttivita([],Settimana).
+inSerttimanaAbbiamoTutteLeAttivita([(tempo_libero,T)|Rest],Settimana):-
+    !,
+    inSerttimanaAbbiamoTutteLeAttivita(Rest,Settimana).
+inSerttimanaAbbiamoTutteLeAttivita([(A,T)|Rest],Settimana):-
+    slotInsettimana(A,Settimana,N),
+    T is N*15,
+    inSerttimanaAbbiamoTutteLeAttivita(Rest,Settimana).
+
+slotInSettimana(A,[],0).
+slotInSettimana(A,[A|L],N):-
+    !,
+	slotInSettimana(A,L,N1),
+	N is N1 + 1.
+</div>
+
+<div class="nb-cell markdown" name="md7">
+Aggiungiamo un ulteriore controllo per vedere se gli slot sono sufficenti per tutte le attività:
+</div>
+
+<div class="nb-cell program" name="p6">
+tempo_totale_attività(Tempo):-
+    setof((A,T),X^oc_slot(A,X,T),L),
+    tempo_totale(L,Tempo).
+
+tempo_totale([],0).
+tempo_totale([(tempo_libero,_)|L],T):-
+    !,
+    tempo_totale(L,T).
+tempo_totale([(_,T2)|L],T):-
+    !,
+    tempo_totale(L,T1),
+    T is T1 + T2/15.
+</div>
+
+<div class="nb-cell program" name="p7">
+oc_slot(katy,prj,240).
+oc_slot(sfidanow,prj,240).
+oc_slot(step,prj,240).
+oc_slot(giustiziagiusta,prj,180).
+oc_slot(revert,prj,180).
+oc_slot(foi,lez,360).
+oc_slot(lmp,lez,240).
+oc_slot(c1,coll,60).
+oc_slot(c2,coll,60).
+oc_slot(c3,coll,60).
+oc_slot(c4,coll,60).
+oc_slot(c5,coll,60).
+oc_slot(c6,coll,60).
+oc_slot(studio,studio,240).
+oc_slot(revisione,studio,120).
+oc_slot(tempo_libero,tempo_libero,1000).
+
+tabella_oraria_settimanale(Settimana):-
+    Nslots is 4*8*6,
+    length(Settimana,Nslots),
+    tempo_totale_attività(NslotsAttivo),
+    NslotsAttivo &lt; Nslots,
+    tabella_possibile(Settimana),
+    vincoli_soddisfatti(Settimana).
+
+tabella_possibile([]).
+tabella_possibile([_15Min|L]):-
+    oc_slot(_15Min,_,_),
+    tabella_possibile(L).
+
+tempo_totale_attività(Tempo):-
+    setof((A,T),X^oc_slot(A,X,T),L),
+    tempo_totale(L,Tempo).
+
+tempo_totale([],0).
+tempo_totale([(tempo_libero,_)|L],T):-
+    !,
+    tempo_totale(L,T).
+tempo_totale([(_,T2)|L],T):-
+    !,
+    tempo_totale(L,T1),
+    T is T1 + T2/15.
+</div>
+
+<div class="nb-cell query" name="q3">
+tempo_totale_attività(Tempo), Nslots is 4*8*6.
+</div>
+
+<div class="nb-cell program" name="p8">
+oc_slot(katy,prj,240).
+oc_slot(sfidanow,prj,240).
+oc_slot(step,prj,240).
+oc_slot(giustiziagiusta,prj,180).
+oc_slot(revert,prj,180).
+oc_slot(foi,lez,360).
+oc_slot(lmp,lez,240).
+oc_slot(c1,coll,60).
+oc_slot(c2,coll,60).
+oc_slot(c3,coll,60).
+oc_slot(c4,coll,60).
+oc_slot(c5,coll,60).
+oc_slot(c6,coll,60).
+oc_slot(studio,studio,240).
+oc_slot(revisione,studio,120).
+oc_slot(tempo_libero,tempo_libero,1000).
+
+tabella_oraria_settimanale(Settimana):-
+    Nslots is 4*8*6,
+    length(Settimana,Nslots),
+    tempo_totale_attività(NslotsAttivo),
+    NslotsAttivo &lt; Nslots,
+    tabella_possibile(Settimana),
+    Settimana = [A,B,C|R],
+    write(l(A,B,C)),nl,
+    vincoli_soddisfatti(Settimana).
+
+tabella_possibile([]).
+tabella_possibile([_15Min|L]):-
+    oc_slot(_15Min,_,_),
+    tabella_possibile(L).
+
+tempo_totale_attività(Tempo):-
+    setof((A,T),X^oc_slot(A,X,T),L),
+    tempo_totale(L,Tempo).
+
+tempo_totale([],0).
+tempo_totale([(tempo_libero,_)|L],T):-
+    !,
+    tempo_totale(L,T).
+tempo_totale([(_,T2)|L],T):-
+    !,
+    tempo_totale(L,T1),
+    T is T1 + T2/15.
+             
+vincoli_soddisfatti(Settimana):-
+    setof((A,T),X^oc_slot(A,X,T),ListaAttività),
+    inSerttimanaAbbiamoTutteLeAttivita(ListaAttività,Settimana).
+
+inSerttimanaAbbiamoTutteLeAttivita([],Settimana).
+inSerttimanaAbbiamoTutteLeAttivita([(tempo_libero,T)|Rest],Settimana):-
+    !,
+    inSerttimanaAbbiamoTutteLeAttivita(Rest,Settimana).
+inSerttimanaAbbiamoTutteLeAttivita([(A,T)|Rest],Settimana):-
+    slotInSettimana(A,Settimana,N),
+    T is N*15,
+    inSerttimanaAbbiamoTutteLeAttivita(Rest,Settimana).
+
+slotInSettimana(A,[],0).
+slotInSettimana(A,[A|L],N):-
+    !,
+	slotInSettimana(A,L,N1),
+	N is N1 + 1.
+</div>
+
+<div class="nb-cell query" name="q4">
+tabella_oraria_settimanale(S).
+</div>
+
+</div>

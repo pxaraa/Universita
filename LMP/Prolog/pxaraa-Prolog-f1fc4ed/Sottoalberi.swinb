@@ -1,0 +1,44 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+Un altro utilizzo della prog dinamica è per il calcolo dei sotto alberi, in quanto se sappiamo la grandezza del sotto albero inferiore e vogliamo sapere quello superiore non necessito di ricalcolare da capo quello inferiore.
+</div>
+
+<div class="nb-cell program" name="p1">
+%t(nodo,lista_figli).
+%t(nodo,[]). foglia
+
+%l albero è del tipo: t(1, [t(2, [t(1,[]),t(2,[]),t(4,[])])
+
+sottoalbero_r(t(A,_),t(A,[])).
+sottoalbero_r(t(A,LF),t(A,LFF)):-
+    \+ LF == [],
+    sottoalberi_r(LF,LFF).
+
+sottoalberi_r([],[]).
+sottoalberi_r([A|LF],[SA|LFF]):-
+    sottoalbero_r(A,SA),
+    sottoalberi_r(LF,LFF).
+
+
+%PUNTO PER IL CONTROLLO DELL' ORDINE NELLA
+%GENERAZIONE DELLE SOLUZIONI DEI SOTTOALBERI
+sottoalbero(t(_,FS),TS):-
+    member(T,FS),
+    sottoalbero_r(T,TS).
+sottoalbero(T,TS):-
+    sottoalbero_r(T,TS).
+
+sottoalberi(T,TSS):-
+    setof(TS,sottoalbero(T,TS),TSS).
+</div>
+
+<div class="nb-cell query" name="q1">
+sottoalbero_r(t(4,[t(1,[]),t(3,[])]),S).
+</div>
+
+<div class="nb-cell query" name="q2">
+sottoalbero(t(4,[t(1,[]),t(3,[])]),S).
+</div>
+
+</div>

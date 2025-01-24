@@ -1,0 +1,24 @@
+//prima va fatto il passo induttivo e dopo quello base(per capire quale oggetto andrà destrutturato)
+-------------------------------------------------------------------------------------------------------------
+appartiene(X,[X|_]). // caso base, X appartiene alla testa della seconda lista
+appartiene(X,[_|T]):- //induzione strutturale, X appartiene alla coda.
+    appartiene(X,T).
+--------------------------------------------------------------------------------------------------------------
+          |(L1,L2,L3)|
+appiccicata([],L2,L2). //caso base, L1 è una lista vuota quindi L3=L2
+appiccicata([H|T],L2,[H|T1]):-// induzione strutturale, L1 è destrutturato e sicuramente L3 inizia con H di L1. 
+    appiccicata(T,L2,T1). //appiccicata della coda restante T di L1 con L2 è ciò che avremo nella coda T1 di L3
+---------------------------------------------------------------------------------------------------------------
+rivoltata([],[]).
+rivoltata([H|T],R):-
+   rivoltata(T,RT),
+   appiccicata(RT,[H],R).
+----------------------------------------------------------------------------------------------------------------
+occorrenze(_,[],0).
+occorrenze(X,[X|T],N):-
+    !,
+    occorrenze(X,T,M),
+    N is M + 1.
+occorrenze(X,[_|T],N):-
+    occorrenze(X,T,N).
+------------------------------------------------------------------------------------------------------------------

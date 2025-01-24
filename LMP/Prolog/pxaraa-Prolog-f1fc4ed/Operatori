@@ -1,0 +1,16 @@
+:-op(priorità,yfx,nomeOperatore)
+xfx = operatore in mezzo
+fxx = operatore a sx
+Nell' albero della priorità degli operatori è in ordine decrescente. da 0 a 1200
+
+ha - 700
+di - 600
+
+mario ha macchina di dario
+
+:-op(700,xfx,ha).
+:-op(600,xfx,di).
+
+mario ha macchina di dario.
+giovanni ha cestino di mario.
+

@@ -1,0 +1,7 @@
+lung([],0). // lunghezza è 0.
+lung([H|T],N):- // la lunghezza di una lista è N se:
+    lung(T,N1),             la lunhezza della coda T è N1 e 
+    N is N1 + 1.            se N è N1 + 1
+// con l' 'is' usciamo in parte dalla dichiaratività in questo caso.
+
+

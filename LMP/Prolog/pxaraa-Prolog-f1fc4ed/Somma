@@ -1,0 +1,32 @@
+somma_cifre(0,0,0,0).
+somma_cifre(0,1,0,1).
+somma_cifre(0,2,0,2).
+somma_cifre(1,0,0,1).
+somma_cifre(1,1,0,2).
+somma_cifre(1,2,1,0).
+somma_cifre(2,0,0,2).
+somma_cifre(2,1,1,0).
+somma_cifre(2,2,1,1).
+
+somma([],N,N,0).
+somma([],N,N1,1):-
+    somma([],N,N,0).
+somma(N,[],N,0).
+somma(N,[],N1,1):-
+    somma(N,[1],N1,0).
+
+somma([C1|T1],[C2|T2],[C3|T3],R):-
+    somma_cifre(C1,C2,NRT,CT),
+    somma_cifre(CT,R,NRX,C3),
+    somma_cifre(NRT,NRX,_,NR),
+    somma(T1,T2,T3,NR).
+
+A = 2 + 3, B = 3 + 2, B = A.
+FALSE
+A = 2 + 3, B = 2 + 3, B = A.
+TRUE //con l' '=' ci stiamo chiedendo se B è unificabile ad A.
+Mentre:
+5 is 2 + 3.
+TRUE //stiamo utilizzando l' alu.
+5 is X + 3.
+ERRORE // in questo caso siamo usciti dal dichiarativo in quanto non mi fornisce una X che verifichi il predicato.

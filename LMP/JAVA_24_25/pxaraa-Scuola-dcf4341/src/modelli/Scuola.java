@@ -19,13 +19,5 @@ public class Scuola {
     public List<Classe> getClassi() {
         return classi;
     }
-
-    @Override
-    public String toString() {
-        return "Scuola{" +
-                "nome='" + nome + '\'' +
-                ", classi=" + classi +
-                '}';
-    }
 }
 

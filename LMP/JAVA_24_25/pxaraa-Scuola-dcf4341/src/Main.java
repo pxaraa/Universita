@@ -5,7 +5,6 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-
         // Creazione della scuola
         Scuola scuola = new Scuola("Liceo Scientifico Galileo");
 
